@@ -153,3 +153,24 @@ TEST_CASE("Traversals Structure", "[traversal]") {
     REQUIRE(post[0]->ufid == 1); 
     REQUIRE(post[6]->ufid == 4); 
 }
+
+TEST_CASE("Remove Internal Node with Two Children", "[remove_internal]") {
+    GatorBST tree;
+    
+    tree.Insert(100, "Root");
+    tree.Insert(50, "Target");
+    tree.Insert(150, "Sibling");
+    tree.Insert(20, "LeftChild");
+    tree.Insert(80, "RightChild"); 
+
+    REQUIRE(tree.Remove(50));
+    REQUIRE_FALSE(tree.SearchID(50).has_value());
+    vector<Node*> pre = tree.TraversePreorder();
+    REQUIRE(pre.size() == 4);
+    
+    REQUIRE(pre[0]->ufid == 100);
+    REQUIRE(pre[0]->left->ufid == 80);
+    REQUIRE(pre[0]->left->left->ufid == 20);
+    REQUIRE(pre[0]->right->ufid == 150);
+}
+
