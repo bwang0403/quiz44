@@ -149,3 +149,24 @@ TEST_CASE("Edge Cases: Remove Root and Height Check", "[edge_remove]") {
     REQUIRE(tree.SearchID(30).has_value());
     REQUIRE(tree.Height() == 1);
 }
+
+TEST_CASE("Complex Remove Operations", "[remove_complex]") {
+    GatorBST tree;
+
+    REQUIRE_FALSE(tree.Remove(100));
+
+    tree.Insert(50, "Root");
+    tree.Insert(20, "Left");
+    tree.Insert(80, "RightSuccessor");
+    tree.Insert(90, "RightRight");
+
+    REQUIRE(tree.Remove(50));
+
+    REQUIRE_FALSE(tree.SearchID(50).has_value());
+    
+    vector<Node*> pre = tree.TraversePreorder();
+    REQUIRE(pre.size() == 3);
+    REQUIRE(pre[0]->ufid == 80);      
+    REQUIRE(pre[0]->left->ufid == 20); 
+    REQUIRE(pre[0]->right->ufid == 90);
+}
