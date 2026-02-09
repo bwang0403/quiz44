@@ -117,3 +117,35 @@ TEST_CASE("Traversals Validation", "[traversal]") {
     REQUIRE(post[0]->ufid == 1);
     REQUIRE(post[6]->ufid == 4);
 }
+
+TEST_CASE("Edge Cases: Remove Root and Height Check", "[edge_remove]") {
+    GatorBST tree;
+    
+    tree.Insert(10, "OnlyRoot");
+    REQUIRE(tree.Height() == 1);
+    
+    REQUIRE(tree.Remove(10));
+    
+    REQUIRE(tree.Height() == 0); 
+    REQUIRE_FALSE(tree.SearchID(10).has_value());
+    REQUIRE(tree.TraverseInorder().empty());
+
+    tree.Insert(20, "Root");
+    tree.Insert(10, "LeftChild");
+    
+    REQUIRE(tree.Remove(20));
+    
+    auto rootCheck = tree.SearchID(10);
+    REQUIRE(rootCheck.has_value());
+    REQUIRE(tree.Height() == 1);
+    
+    tree.Remove(10);
+    
+    tree.Insert(20, "Root");
+    tree.Insert(30, "RightChild");
+    
+    REQUIRE(tree.Remove(20));
+    
+    REQUIRE(tree.SearchID(30).has_value());
+    REQUIRE(tree.Height() == 1);
+}
